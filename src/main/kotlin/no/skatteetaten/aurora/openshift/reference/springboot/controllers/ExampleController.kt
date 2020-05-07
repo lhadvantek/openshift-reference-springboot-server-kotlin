@@ -7,7 +7,8 @@ import no.skatteetaten.aurora.AuroraMetrics.StatusValue.OK
 import no.skatteetaten.aurora.openshift.reference.springboot.service.SometimesFailingService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.client.RestTemplate
+import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.client.bodyToMono
 
 /*
  * An example controller that shows how to do a REST call and how to do an operation with a operations metrics
@@ -15,15 +16,22 @@ import org.springframework.web.client.RestTemplate
  */
 @RestController
 class ExampleController(
-    private val restTemplate: RestTemplate,
+    private val webClient: WebClient,
     private val metrics: AuroraMetrics,
     private val sometimesFailingService: SometimesFailingService
 ) {
 
     @GetMapping("/api/example/ip")
     fun ip(): Map<String, Any> {
-        val response = restTemplate.getForObject("http://httpbin.org/ip", JsonNode::class.java)
+        val response = webClient
+            .get()
+            .uri("http://httpbin.org/ip")
+            .retrieve()
+            .bodyToMono<JsonNode>()
+            .block()
+
         val ip = response?.get("origin")?.textValue() ?: "Ip missing from response"
+
         return mapOf("ip" to ip)
     }
 

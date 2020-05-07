@@ -3,6 +3,7 @@ package no.skatteetaten.aurora.openshift.reference.springboot.controller
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.Metrics
 import no.skatteetaten.aurora.AuroraMetrics
+import no.skatteetaten.aurora.openshift.reference.springboot.ApplicationConfig
 import no.skatteetaten.aurora.openshift.reference.springboot.controllers.ErrorHandler
 import no.skatteetaten.aurora.openshift.reference.springboot.controllers.ExampleController
 import no.skatteetaten.aurora.openshift.reference.springboot.service.SometimesFailingService
@@ -34,7 +35,7 @@ class Config {
 }
 
 @WebMvcTest(controllers = [ExampleController::class, ErrorHandler::class])
-@Import(value = [Config::class, AuroraMetrics::class])
+@Import(value = [Config::class, AuroraMetrics::class, ApplicationConfig::class])
 @AutoConfigureWebClient(registerRestTemplate = true)
 @AutoConfigureMockRestServiceServer
 class ExampleControllerTest : AbstractController() {
