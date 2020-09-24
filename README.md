@@ -293,3 +293,4 @@ In Jenkins this will be disabled so that all Leveransepakke that is built on Jen
 you want to have jenkins in a snapshot build use the development flow and build it locally. Or conditionally add the `devtools`
  profile to the deploy goal in jenkins pipeline.
    	
+--end--
