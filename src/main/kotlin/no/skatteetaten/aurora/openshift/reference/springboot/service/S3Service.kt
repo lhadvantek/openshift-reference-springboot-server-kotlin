@@ -11,8 +11,10 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest
 @Service
 class S3Service(
     @Qualifier("default") val s3Client: S3Client,
-    @Qualifier("default") val s3Bucket: S3Properties.S3Bucket
+    s3Properties: S3Properties
 ) {
+    private val s3Bucket = s3Properties.buckets["default"] ?: throw RuntimeException("")
+
     init {
         putHostFile()
     }

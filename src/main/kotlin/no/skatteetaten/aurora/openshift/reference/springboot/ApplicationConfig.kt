@@ -19,10 +19,6 @@ class ApplicationConfig {
     @Bean
     fun restTemplate(builder: RestTemplateBuilder): RestTemplate = builder.build()
 
-    @Qualifier("default")
-    @Bean
-    fun getS3Bucket(s3Properties: S3Properties): S3Properties.S3Bucket =
-        s3Properties.buckets["default"] ?: throw RuntimeException("Error finding s3Bucket")
 
     @Qualifier("default")
     @Bean

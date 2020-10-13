@@ -29,7 +29,6 @@ spring:
         password: ${refapp.datasource.password:password}
 
 
-
 s3:
     buckets:
         default:
