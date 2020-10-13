@@ -1,0 +1,30 @@
+version: "3.7"
+
+services:
+    minio:
+        image: minio/minio
+        restart: always
+        volumes:
+            - data1-1:/data1
+        environment:
+            MINIO_ACCESS_KEY: minio
+            MINIO_SECRET_KEY: miniosecret
+        command: server /data/minio
+        expose:
+            - "9000"
+
+
+    createbuckets:
+        image: minio/mc
+        depends_on:
+            - minio
+        entrypoint: >
+            /bin/sh -c "
+            /usr/bin/mc config host add myminio http://minio:9000 minio miniosecret;
+            /usr/bin/mc rm -r --force myminio/default;
+            /usr/bin/mc mb myminio/default;
+            /usr/bin/mc policy set public myminio/default;
+            exit 0;
+            "
+volumes:
+    data1-1:
