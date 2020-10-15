@@ -351,9 +351,8 @@
       <artifactId>spring-boot-starter-jdbc</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.oracle</groupId>
-      <artifactId>ojdbc8</artifactId>
-      <version>${ojdbc8.version}</version>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
     </dependency>
     <dependency>
       <groupId>org.flywaydb</groupId>

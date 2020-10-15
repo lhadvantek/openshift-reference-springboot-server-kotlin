@@ -4,8 +4,11 @@ import com.fasterxml.jackson.databind.JsonNode
 import no.skatteetaten.aurora.AuroraMetrics
 import no.skatteetaten.aurora.AuroraMetrics.StatusValue.CRITICAL
 import no.skatteetaten.aurora.AuroraMetrics.StatusValue.OK
+import no.skatteetaten.aurora.openshift.reference.springboot.service.S3Service
 import no.skatteetaten.aurora.openshift.reference.springboot.service.SometimesFailingService
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.client.RestTemplate
 
@@ -17,7 +20,8 @@ import org.springframework.web.client.RestTemplate
 class ExampleController(
     private val restTemplate: RestTemplate,
     private val metrics: AuroraMetrics,
-    private val sometimesFailingService: SometimesFailingService
+    private val sometimesFailingService: SometimesFailingService,
+    private val s3Service: S3Service
 ) {
 
     @GetMapping("/api/example/ip")
@@ -41,8 +45,23 @@ class ExampleController(
         }
     }
 
+    @PostMapping("/api/example/s3")
+    fun postFileContent(@RequestBody request: S3FileContentRequest): S3FileContentResponse {
+        s3Service.putFileContent(request.fileName, request.content)
+        return S3FileContentResponse(s3Service.getFileContent(request.fileName))
+    }
+
     companion object {
 
         private val METRIC_NAME = "sometimes"
     }
 }
+
+data class S3FileContentRequest(
+    val fileName: String,
+    val content: String
+)
+
+data class S3FileContentResponse(
+    val content: String
+)

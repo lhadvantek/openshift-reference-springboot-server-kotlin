@@ -25,6 +25,9 @@ class S3Service(
         println(getFileContent(file.name))
     }
 
+    fun putFileContent(keyName: String, fileContent: String) =
+        putFile(keyName, File(keyName).apply { writeText(fileContent) } )
+
     fun putFile(keyName: String, file: File) {
         val fullKeyName = "${s3Bucket.objectPrefix}/$keyName"
         s3Client.putObject(
