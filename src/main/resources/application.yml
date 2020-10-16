@@ -10,7 +10,6 @@ spring:
     datasource:
         # Change the maximum pool size if your application needs it.
         hikari.maximumPoolSize: 3
-        driver-class-name: org.postgresql.Driver
 
 logging:
     level:

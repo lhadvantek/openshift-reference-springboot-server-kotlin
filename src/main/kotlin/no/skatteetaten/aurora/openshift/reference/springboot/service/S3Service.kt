@@ -15,16 +15,6 @@ class S3Service(
 ) {
     private val s3Bucket = s3Properties.buckets["default"] ?: throw RuntimeException("")
 
-    init {
-        putHostFile()
-    }
-
-    fun putHostFile() {
-        val file = File("/etc/hosts")
-        putFile(file.name, file)
-        println(getFileContent(file.name))
-    }
-
     fun putFileContent(keyName: String, fileContent: String) =
         putFile(keyName, File(keyName).apply { writeText(fileContent) } )
 

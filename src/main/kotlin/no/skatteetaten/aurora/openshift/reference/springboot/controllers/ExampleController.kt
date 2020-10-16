@@ -52,7 +52,6 @@ class ExampleController(
     }
 
     companion object {
-
         private val METRIC_NAME = "sometimes"
     }
 }
