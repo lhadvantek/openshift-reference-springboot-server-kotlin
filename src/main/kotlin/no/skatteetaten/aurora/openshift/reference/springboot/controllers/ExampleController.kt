@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate
 /*
  * An example controller that shows how to do a REST call and how to do an operation with a operations metrics
  * There should be a metric called http_client_requests http_server_requests and operations
+ * The controller also shows an example of S3 usage
  */
 @RestController
 class ExampleController(

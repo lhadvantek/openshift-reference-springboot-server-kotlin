@@ -1,12 +1,16 @@
 package no.skatteetaten.aurora.openshift.reference.springboot.controller
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.Metrics
 import no.skatteetaten.aurora.AuroraMetrics
 import no.skatteetaten.aurora.openshift.reference.springboot.controllers.ErrorHandler
 import no.skatteetaten.aurora.openshift.reference.springboot.controllers.ExampleController
+import no.skatteetaten.aurora.openshift.reference.springboot.controllers.S3FileContentRequest
+import no.skatteetaten.aurora.openshift.reference.springboot.service.S3Service
 import no.skatteetaten.aurora.openshift.reference.springboot.service.SometimesFailingService
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureMockRestServiceServer
@@ -15,6 +19,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Import
+import org.springframework.http.MediaType
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse
@@ -26,6 +31,7 @@ import org.springframework.test.web.client.MockRestServiceServer
 import org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo
 import org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 class Config {
@@ -44,6 +50,9 @@ class ExampleControllerTest : AbstractController() {
 
     @MockBean
     private lateinit var sometimesFailingService: SometimesFailingService
+
+    @MockBean
+    private lateinit var s3Service: S3Service
 
     @Test
     fun `Example test for documenting the ip endpoint`() {
@@ -107,4 +116,34 @@ class ExampleControllerTest : AbstractController() {
                 )
             )
     }
+
+    @Test
+    fun `Example test for documenting the s3 endpoint`() {
+        given(s3Service.putFileContent(anyString(), anyString())).willAnswer { }
+        given(s3Service.getFileContent(anyString())).willReturn("Content from file")
+
+        val apiUrl = "/api/example/s3"
+
+        val request = S3FileContentRequest(
+            "myFile.txt",
+            "Content from file"
+        )
+
+        mvc.perform(post(apiUrl).content(request.toByteArray()).contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isOk)
+            .andDo(
+                document(
+                    "example-s3-storefile",
+                    preprocessResponse(prettyPrint()),
+                    responseFields(
+                        fieldWithPath("content")
+                            .type(JsonFieldType.STRING)
+                            .description("The content of the file that was stored")
+                    )
+                )
+            )
+    }
+
+    private fun S3FileContentRequest.toByteArray() =
+        jacksonObjectMapper().writeValueAsBytes(this)
 }

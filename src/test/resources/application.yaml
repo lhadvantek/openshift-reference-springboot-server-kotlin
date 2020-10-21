@@ -1,3 +1,13 @@
 spring:
     main:
         banner-mode: "off"
+
+s3:
+    buckets:
+        default:
+            serviceEndpoint: "http://localhost:9000"
+            accessKey: "minio"
+            secretKey: "miniosecret"
+            objectPrefix: "default"
+            bucketRegion: "us-east-1"
+            bucketName: "default"
