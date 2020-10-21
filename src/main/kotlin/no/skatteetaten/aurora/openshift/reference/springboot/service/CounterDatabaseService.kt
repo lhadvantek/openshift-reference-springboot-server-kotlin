@@ -15,7 +15,7 @@ class CounterDatabaseService(private val jdbcTemplate: JdbcTemplate) {
 
     @Transactional
     fun getAndIncrementCounter(): Long {
-        val counter: Long = jdbcTemplate.queryForObject("SELECT value FROM counter FOR UPDATE OF value")
+        val counter: Long = jdbcTemplate.queryForObject("SELECT value FROM counter FOR UPDATE")
             ?: throw IllegalStateException("counter table not initialized")
         jdbcTemplate.update("UPDATE counter SET value=value+1")
         return counter

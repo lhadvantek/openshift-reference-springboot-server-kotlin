@@ -387,11 +387,6 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>software.amazon.awssdk</groupId>
       <artifactId>s3</artifactId>
     </dependency>
@@ -399,6 +394,12 @@
       <groupId>io.findify</groupId>
       <artifactId>s3mock_2.13</artifactId>
       <version>0.2.6</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.zonky.test</groupId>
+      <artifactId>embedded-database-spring-test</artifactId>
+      <version>1.5.5</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

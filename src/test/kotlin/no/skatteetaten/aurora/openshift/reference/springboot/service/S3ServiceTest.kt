@@ -1,6 +1,7 @@
 package no.skatteetaten.aurora.openshift.reference.springboot.service
 
 import io.findify.s3mock.S3Mock
+import io.zonky.test.db.AutoConfigureEmbeddedDatabase
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -13,6 +14,7 @@ import software.amazon.awssdk.services.s3.model.CreateBucketRequest
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest
+@AutoConfigureEmbeddedDatabase
 class S3ServiceTest {
 
     @Autowired
