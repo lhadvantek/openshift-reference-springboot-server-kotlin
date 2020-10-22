@@ -15,16 +15,12 @@ class S3Service(
 ) {
     private val s3Bucket = s3Properties.buckets["default"] ?: throw RuntimeException("")
 
-    fun putFileContent(keyName: String, fileContent: String) =
-        putFile(keyName, File(keyName).apply { this.writeText(fileContent) } )
-
-    private fun putFile(keyName: String, file: File) {
+    fun putFileContent(keyName: String, fileContent: String) {
         val fullKeyName = "${s3Bucket.objectPrefix}/$keyName"
         s3Client.putObject(
             PutObjectRequest.builder().bucket(s3Bucket.bucketName).key(fullKeyName).build(),
-            RequestBody.fromFile(file)
+            RequestBody.fromString(fileContent)
         )
-        file.delete()
     }
 
     fun getFileContent(keyName: String): String {
